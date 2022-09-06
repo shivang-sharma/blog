@@ -1,0 +1,293 @@
+<template>
+  <div class="mt-12">
+    <div>
+      <v-row dense>
+        <v-col
+          :cols="10"
+        >
+          <v-btn text>Open</v-btn>
+          <v-btn @click="save" text>Save</v-btn>
+        </v-col>
+        <v-col
+          :cols="2"
+          class="pl-12"
+        >
+          <v-btn text class="ml-4">Publish</v-btn>
+        </v-col>
+      </v-row>
+    </div>
+    <div  class="mr-12" style=" background-color: white;">
+      <div>
+        <v-row>
+          <v-col>
+            <v-btn @click="execCmd('bold'); bold=!bold" :class="bold ? 'button' : ''" small text>
+              <i class="fa fa-bold" />
+            </v-btn>
+            <v-btn @click="execCmd('italic'); italic=!italic" :class="italic ? 'button' : ''" small text>
+              <i class="fa fa-italic" />
+            </v-btn>
+            <v-btn @click="execCmd('underline'); underline=!underline" :class="underline ? 'button' : ''" small text>
+              <i class="fa fa-underline" />
+            </v-btn>
+            <v-btn @click="execCmd('strikeThrough'); strike=!strike" :class="strike ? 'button' : ''" small text>
+              <i class="fa fa-strikethrough" />
+            </v-btn>
+            <v-btn @click="execCmd('justifyLeft')" class="" small text>
+              <i class="fa fa-align-left" />
+            </v-btn>
+            <v-btn @click="execCmd('justifyRight')" class="" small text>
+              <i class="fa fa-align-right" />
+            </v-btn>
+            <v-btn @click="execCmd('justifyCenter')" class="" small text>
+              <i class="fa fa-align-center" />
+            </v-btn>
+            <v-btn @click="execCmd('justifyFull')" class="" small text>
+              <i class="fa fa-align-justify" />
+            </v-btn>
+            <v-btn @click="execCmd('cut'); cut=!cut" :class="cut ? 'button' : ''" small text>
+              <i class="fa fa-cut" />
+            </v-btn>
+            <v-btn @click="execCmd('copy'); copy=!copy" :class="copy ? 'button' : ''" small text>
+              <i class="fa fa-copy" />
+            </v-btn>
+            <v-btn @click="execCmd('indent')" class="" small text>
+              <i class="fa fa-indent" />
+            </v-btn>
+            <v-btn @click="execCmd('outdent')" class="" small text>
+              <i class="fa fa-dedent" />
+            </v-btn>
+            <v-btn @click="execCmd('subscript'); sub=!sub" :class="sub ? 'button' : ''" small text>
+              <i class="fa fa-subscript" />
+            </v-btn>
+            <v-btn @click="execCmd('superscript'); sup=!sup" :class="sup ? 'button' : ''" small text>
+              <i class="fa fa-superscript" />
+            </v-btn>
+            <v-btn @click="execCmd('undo')" class="" small text>
+              <i class="fa fa-undo" />
+            </v-btn>
+            <v-btn @click="execCmd('redo')" class="" small text>
+              <i class="fa fa-repeat" />
+            </v-btn>
+            <v-btn @click="execCmd('insertUnorderedList')" class="" small text>
+              <i class="fa fa-list-ul" />
+            </v-btn>
+            <v-btn @click="execCmd('insertOrderedList')" class="" small text>
+              <i class="fa fa-list-ol" />
+            </v-btn>
+            <v-btn @click="execCmd('insertParagraph')" class="" small text>
+              <i class="fa fa-paragraph" />
+            </v-btn>
+            <v-btn @click="execCommandWithArg('insertImage', prompt('Enter the image url', ''))" class="" small text>
+              <i class="fa fa-file-image-o" />
+            </v-btn>
+            <v-btn @click="execCommandWithArg('createLink', prompt('Enter a url', 'http://'))" class="" small text>
+              <i class="fa fa-link" />
+            </v-btn>
+            <v-btn @click="execCmd('unlink')" class="" small text>
+              <i class="fa fa-unlink" />
+            </v-btn>
+            <v-btn @click="execCmd('insertHorizontalRule')" class="" small text>
+              HR
+            </v-btn>
+            <v-btn @click="toggleSource()" :class="showingSourceCode ? 'button' : ''" small text>
+              <i class="fa fa-code" />
+            </v-btn>
+            <v-btn @click="execCmd('selectAll')" class="" small text>
+              Select All
+            </v-btn>
+          <!--  <v-btn @click="toggleEdit" :class="isInEditMode ? 'button' : ''" small text>
+              Toggle Edit
+            </v-btn>-->
+            <select v-model="heading" @change="execCommandWithArg('formatBlock', heading)" class="dropdown">
+              <option value="H1">
+                H1
+              </option>
+              <option value="H2">
+                H2
+              </option>
+              <option value="H3">
+                H3
+              </option>
+              <option value="H4">
+                H4
+              </option>
+              <option value="H5">
+                H5
+              </option>
+              <option value="H6">
+                H6
+              </option>
+            </select>
+            <select v-model="size" style="margin-left: 1%; margin-right: 1%;" @change="execCommandWithArg('fontSize', size)"  class="dropdown">
+              <option value="1">
+                1
+              </option>
+              <option value="2">
+                2
+              </option>
+              <option value="3">
+                3
+              </option>
+              <option value="4">
+                4
+              </option>
+              <option value="5">
+                5
+              </option>
+              <option value="6">
+                6
+              </option>
+              <option value="7">
+                7
+              </option>
+              <option value="8">
+                8
+              </option>
+              <option value="9">
+                9
+              </option>
+              <option value="10">
+                10
+              </option>
+              <option value="11">
+                11
+              </option>
+              <option value="12">
+                12
+              </option>
+              <option value="13">
+                13
+              </option>
+              <option value="14">
+                14
+              </option>
+            </select>
+            <span class="picker">Foreground:
+              <input v-model="foreground" type="color" style="padding-top: .1%; margin-right: 1%;" @change="execCommandWithArg('foreColor', foreground);">
+            </span>
+            <span class="picker">
+              Background:
+              <input v-model="background" type="color" style="padding-top: .1%; margin-right: 1%;" @change="execCommandWithArg('hiliteColor', background)">
+            </span>
+            <select v-model="family" @change="execCommandWithArg('fontName', family)" class="dropdown">
+              <option
+                value="Arial"
+              >
+                Arial
+              </option>
+              <option
+                value="Comic Sans MS"
+              >
+                Comic Sans MS
+              </option>
+              <option
+                value="Courier"
+              >
+                Courier
+              </option>
+              <option value="Georgia">
+                Georgia
+              </option>
+              <option value="Tahoma">
+                Tahoma
+              </option>
+              <option value="Times New Roman">
+                Times New Roman
+              </option>
+              <option value="Verdana">
+                Verdana
+              </option>
+            </select>
+          </v-col>
+        </v-row>
+      </div>
+      <v-row style="height: 400px;" >
+        <v-col
+          :cols="12"
+          class="pb-1"
+          style="height: 100%"
+        >
+          <iframe ref="richTextField" style="width: 100%; height: 100%;" />
+        </v-col>
+      </v-row>
+    </div>
+  </div>
+</template>
+<style scoped>
+.button{
+  background-color:lightgray;
+}
+.picker, .dropdown{
+  font-weight: 500;
+  letter-spacing: 0.0892857143em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+</style>
+<script>
+export default {
+  data: () => ({
+    bold: false,
+    italic: false,
+    underline: false,
+    strike: false,
+    copy: false,
+    cut: false,
+    sup: false,
+    sub: false,
+    src: false,
+    showingSourceCode: false,
+    isInEditMode: true,
+    richTextField: null,
+    heading: 'H5',
+    headingList: ['H5', 'H4', 'H3', 'H2', 'H1'],
+    size: '12',
+    sizeList: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18',
+      '19', '20', '21', '22', '23', '24', '25', ' 26', '27', '28', '29', '30'],
+    family: 'Arial',
+    familyList: ['Verdana', 'Arial', 'Tahoma', 'Serif', 'Times New Roman'],
+    background: null,
+    foreground: null
+  }),
+  mounted () {
+    this.richTextField = this.$refs.richTextField.contentWindow || this.$refs.richTextField.contentDocument
+    this.enableEditMode()
+  },
+  methods: {
+    enableEditMode () {
+      this.richTextField.document.designMode = 'On'
+    },
+    execCmd (command) {
+      this.richTextField.document.execCommand(command, false, null)
+    },
+    execCommandWithArg (command, arg) {
+      console.log(arg)
+      this.richTextField.document.execCommand(command, false, arg)
+    },
+    toggleSource () {
+      if (this.showingSourceCode) {
+        this.richTextField.document.getElementsByTagName('body')[0].innerHTML = this.richTextField.document.getElementsByTagName('body')[0].textContent
+        this.showingSourceCode = false
+      } else {
+        this.richTextField.document.getElementsByTagName('body')[0].textContent = this.richTextField.document.getElementsByTagName('body')[0].innerHTML
+        this.showingSourceCode = true
+      }
+    },
+    toggleEdit () {
+      if (this.isInEditMode) {
+        this.richTextField.document.designMode = 'Off'
+        this.isInEditMode = false
+      } else {
+        this.richTextField.document.designMode = 'On'
+        this.isInEditMode = true
+      }
+    },
+
+    save () {
+      var post = this.richTextField.document.getElementsByTagName('body')[0].innerHTML
+      console.log(this.richTextField.document.getElementsByTagName('body')[0].innerHTML)
+    }
+
+  }
+}
+</script>

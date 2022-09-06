@@ -1,0 +1,149 @@
+/* eslint-disable */
+<template>
+  <v-content>
+    <v-row>
+      <v-col
+        cols="12"
+        sm="9"
+        md="9"
+      >
+        <div class="pl-6 pb-4">
+          <h1>
+            {{ post.title }}
+          </h1>
+          <v-row>
+            <v-col class="pt-0">
+              <span class="date">Dec 25,2019<span class="ml-6"> - 2min read</span></span><br>
+            </v-col>
+          </v-row>
+        </div>
+
+        <blockquote class="blockquote">
+          {{ post.content }}
+        </blockquote>
+        <v-divider
+          class="mb-4 ml-6"
+        />
+        <h5 class="pl-6">
+          Share this:
+        </h5>
+        <div class="pl-6 pb-4">
+          <v-row>
+            <v-col class="pt-0">
+              <SocialShare :slug="post.slug" />
+            </v-col>
+          </v-row>
+        </div>
+        <v-row>
+          <v-col
+            cols="1"
+          >
+            <h5 class="pl-6 pt-1">
+              Tags:
+            </h5>
+          </v-col>
+          <v-col
+            cols="11"
+            class="pl-0"
+          >
+            <v-btn
+              v-for="tag in post.tags"
+              :key="tag"
+              :to="`/tag/${tag}`"
+              elevation="true"
+              class="mr-1 tag"
+              small
+              color="light-pink"
+              nuxt
+            >
+              #{{ tag }}
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="3"
+        md="3"
+        class="pl-sm-6"
+      >
+        <div>
+          <h3>Related reads</h3>
+          <v-row
+            v-for="card in related"
+            :key="card.title"
+            align="center"
+            justify="start"
+          >
+            <v-col>
+              <v-card
+                :flat="flat"
+                max-width="344"
+              >
+                <v-img
+                  src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg"
+                  height="100"
+                />
+                <v-list-item>
+                  <v-list-item-avatar color="grey" />
+                  <v-list-item-content>
+                    <v-list-item-title
+                      class="headline"
+                    >
+                      <nuxt-link
+                        :to="`/posts/${card.title}`"
+                        :nuxt="nuxt"
+                        class="link"
+                      >
+                        Our Changing Planet
+                      </nuxt-link>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>by Kurt Wagner</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
+      </v-col>
+    </v-row>
+  </v-content>
+</template>
+<style scoped>
+ .date{
+   color: grey;
+}
+.social{
+  margin-left: 600px
+}
+.tag{
+  color: grey
+}
+.link{
+  text-decoration: none;
+}
+</style>
+<script>
+import SocialShare from '../../components/social_share/SocialShare'
+export default {
+  components: {
+    SocialShare
+  },
+  data () {
+    return {
+      slug: this.$route.params.slug,
+      posts: this.$store.state.posts.all,
+      nuxt: true,
+      flat: true
+    }
+  },
+  computed: {
+    post () {
+      return this.$store.state.posts.all.find(post => post.title === this.slug)
+    },
+    related () {
+      return this.$store.state.posts.all.filter(post => post.title !== this.slug)
+    }
+  }
+}
+</script>
